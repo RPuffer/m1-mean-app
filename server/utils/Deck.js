@@ -30,13 +30,14 @@ class Deck {
 		this.deck = []
 		this.config = null
 
-		suits.forEach( s => {
-			values.forEach( v => {
+		for (const s of suits) {
+			for (const v of values) {
 				this.deck.push(new Card(s,v))
-			})
-		})
+			}
+		}
 	}
 
+	// based off modern Fisher-Yates shuffle algorithm
 	shuffle() {
 		let n = this.deck.length
 
@@ -57,33 +58,40 @@ class Deck {
 		this.config = [[],[],[],[]]
 
 		let correctlyOrdered = 0
+		let index = 0
 
-		suits.forEach( (suit, row) => {
-			values.forEach( (value, column) => {
-				const currentCard = this.deck[((row + 1) * (column + 1)) - 1]
+		for (const [row, suit] of suits.entries()) {
+			for (const [column, value] of values.entries()) {
+				const currentCard = this.deck[index]
+				index++
 
-				// console.log(currentCard.hasMatch)
-
+				// if it exists - check card above for match
 				if (row > 0) {
-					// this.config[row -1][column] represents the card above the current card in the configuration
-					currentCard.checkMatch(this.config[row -1][column])
-					this.config[row -1][column].checkMatch(currentCard)
+					currentCard.checkMatch(this.config[row - 1][column])
+					this.config[row - 1][column].checkMatch(currentCard)
 				}
+				// if it exists - check card to the left for match
 				if (column > 0) {
-					// this.config[row][column - 1] represents the card to the left of the current card in the configuration
 					currentCard.checkMatch(this.config[row][column - 1])
 					this.config[row][column - 1].checkMatch(currentCard)
 				}
-
-				// console.log(currentCard.hasMatch)
-
+				// if it exists - check card to upper left for match
+				if (row > 0 && column > 0) {
+					currentCard.checkMatch(this.config[row - 1][column - 1])
+					this.config[row - 1][column - 1].checkMatch(currentCard)
+				}
+				// if it exists - check card to upper right for match
+				if (row > 0 && column < values.length - 1) {
+					currentCard.checkMatch(this.config[row - 1][column + 1])
+					this.config[row - 1][column + 1].checkMatch(currentCard)
+				}
 
 				this.config[row][column] = currentCard
 
-				if(currentCard.checkSuit(suit)) correctlyOrdered++
-				if(currentCard.checkValue(value)) correctlyOrdered++
-			})
-		})
+				if(currentCard.checkSuit(suit)) correctlyOrdered += 1
+				if(currentCard.checkValue(value)) correctlyOrdered += 1
+			}
+		}
 
 		const percentage = ((correctlyOrdered / 104) * 100).toFixed(2)
 
@@ -95,3 +103,12 @@ class Deck {
 }
 
 module.exports = Deck
+
+// const d = new Deck()
+
+// d.shuffle()
+
+// const { config, percentage } = d.deal()
+
+// console.log(JSON.stringify(percentage))
+// console.log(config)
