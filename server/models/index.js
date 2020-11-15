@@ -29,7 +29,8 @@ const ConfigurationSchema = new mongoose.Schema({
 
 ConfigurationSchema.plugin(AutoIncrement);
 
-
+// Post save hook to update historical average percentage
+// When a new deck is added, the historical average is calculated and updated
 ConfigurationSchema.post('save', async (doc, next) => {
 	try {
 		let historical = await HistoricalPercentage.findOne()

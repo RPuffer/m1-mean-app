@@ -3,15 +3,12 @@ const Deck = require('../utils/Deck')
 const { Configuration, HistoricalPercentage } = require('../models')
 
 router.use((req, res, next ) => {
-	console.log(`\nRequest for :${req.path}\n`)
+	console.log(`\nRequest for /api/${req.path}\n`)
 	next()
 })
 
-router.get('/', (req, res, next) => {
-	res.json({ msg: 'you hit the api' })
-})
-
-
+// shuffles a new deck and deals the cards in the desired configuration
+// deck configuration is saved to mongo db
 router.get('/deal', async (req, res) => {
 	const deck = new Deck()
 	deck.shuffle()
@@ -33,6 +30,7 @@ router.get('/deal', async (req, res) => {
 	}
 })
 
+// gets all existing decks from the db along with the historical percentage data
 router.get('/history', async (req, res) => {
 	try {
 		const historical = await HistoricalPercentage.findOne({})

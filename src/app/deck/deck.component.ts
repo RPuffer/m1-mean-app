@@ -36,7 +36,6 @@ export class DeckComponent implements OnInit {
   constructor(private dealService: DealService, private historyService: HistoryService) {
     this.dealt = false
     this.hasHistory = false;
-
   }
 
   ngOnInit(): void {
@@ -47,21 +46,20 @@ export class DeckComponent implements OnInit {
       Array(13).fill({}),
       Array(13).fill({}),
     ]
-    this.historical = [
-
-    ]
 
     const comp = this;
 
+    // check for any historical decks in mongo on init (in case of refresh)
     this.historyService.getHistory()
     .toPromise()
     .then(({ decks }) => {
-      console.log(decks)
       comp.historical = decks
       comp.hasHistory = decks.length > 0
     })
   }
 
+  // onClick is executed when the deal button is pressed
+  // retrieves a new deck configuration and updates historical data
   onClick(): void {
     this.dealt = true
     const comp = this;

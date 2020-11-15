@@ -2,6 +2,8 @@
 const suits = [ 'S', 'D', 'H', 'C' ]
 const values = [ 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K' ]
 
+// Card class stores suit, value, and hasMatch
+// hasMatch indicates whether a matching card exists horizontally/vertically/diagonally
 class Card {
 	constructor(suit, value) {
 		this.suit = suit
@@ -28,7 +30,6 @@ class Card {
 class Deck {
 	constructor() {
 		this.deck = []
-		this.config = null
 
 		for (const s of suits) {
 			for (const v of values) {
@@ -53,9 +54,10 @@ class Deck {
 		}
 	}
 
-
+	// deals out the deck in the desired configuration
+	// checks for card matches during the iteration to save time
 	deal() {
-		this.config = [[],[],[],[]]
+		const config = [[],[],[],[]]
 
 		let correctlyOrdered = 0
 		let index = 0
@@ -68,25 +70,25 @@ class Deck {
 				// if it exists - check card above for match
 				if (row > 0) {
 					currentCard.checkMatch(this.config[row - 1][column])
-					this.config[row - 1][column].checkMatch(currentCard)
+					config[row - 1][column].checkMatch(currentCard)
 				}
 				// if it exists - check card to the left for match
 				if (column > 0) {
 					currentCard.checkMatch(this.config[row][column - 1])
-					this.config[row][column - 1].checkMatch(currentCard)
+					config[row][column - 1].checkMatch(currentCard)
 				}
 				// if it exists - check card to upper left for match
 				if (row > 0 && column > 0) {
 					currentCard.checkMatch(this.config[row - 1][column - 1])
-					this.config[row - 1][column - 1].checkMatch(currentCard)
+					config[row - 1][column - 1].checkMatch(currentCard)
 				}
 				// if it exists - check card to upper right for match
 				if (row > 0 && column < values.length - 1) {
 					currentCard.checkMatch(this.config[row - 1][column + 1])
-					this.config[row - 1][column + 1].checkMatch(currentCard)
+					config[row - 1][column + 1].checkMatch(currentCard)
 				}
 
-				this.config[row][column] = currentCard
+				config[row][column] = currentCard
 
 				if(currentCard.checkSuit(suit)) correctlyOrdered += 1
 				if(currentCard.checkValue(value)) correctlyOrdered += 1
@@ -96,19 +98,10 @@ class Deck {
 		const percentage = ((correctlyOrdered / 104) * 100).toFixed(2)
 
 		return {
-			config: this.config,
+			config,
 			percentage
 		}
 	}
 }
 
 module.exports = Deck
-
-// const d = new Deck()
-
-// d.shuffle()
-
-// const { config, percentage } = d.deal()
-
-// console.log(JSON.stringify(percentage))
-// console.log(config)
