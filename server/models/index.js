@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
-mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true})
+const dbUrl = process.env.NODE_APP_INSTANCE === 'dev'
+	? 'mongodb://localhost:27017/test'
+	: 'mongodb://mongo:27017/test'
+
+mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true})
 mongoose.set('useFindAndModify', false);
 
 const HistoricalPercentage = mongoose.model('HistoricalPercentage', new mongoose.Schema({
@@ -40,7 +44,7 @@ ConfigurationSchema.post('save', async (doc, next) => {
 			const { count, percentage } = historical
 
 			historical.count = count + 1
-			historical.percentage = ((percentage * count) + doc.percentage) / (count + 1)
+			historical.percentage = (((percentage * count) + doc.percentage) / (count + 1)).toFixed(2)
 
 			await historical.save()
 		}

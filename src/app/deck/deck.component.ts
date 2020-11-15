@@ -1,10 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { DealService } from '../deal.service'
+import { HistoryService } from '../history.service';
 
 type Card = {
   suit?: String,
   value?: String,
   hasMatch?: boolean
+}
+
+type Deck = {
+  config: Card[][],
+  percentage: Number,
+  _id: Number,
+}
+
+type History = {
+  count: Number,
+  percentage: Number,
+  decks: Deck[]
 }
 
 @Component({
@@ -14,16 +27,39 @@ type Card = {
 })
 export class DeckComponent implements OnInit {
   dealt: boolean;
-  percentage: number | undefined
+  hasHistory: boolean;
+  percentage: String | undefined
+  historicalPercentage: String | undefined
   configuration: Card[][] | undefined
+  historical: Deck[] | undefined
 
-  constructor(private dealService: DealService) {
+  constructor(private dealService: DealService, private historyService: HistoryService) {
     this.dealt = false
+    this.hasHistory = false;
+
   }
 
   ngOnInit(): void {
     this.dealt = false
-    this.configuration = [[{}],[{}],[{}],[{}]]
+    this.configuration = [
+      Array(13).fill({}),
+      Array(13).fill({}),
+      Array(13).fill({}),
+      Array(13).fill({}),
+    ]
+    this.historical = [
+
+    ]
+
+    const comp = this;
+
+    this.historyService.getHistory()
+    .toPromise()
+    .then(({ decks }) => {
+      console.log(decks)
+      comp.historical = decks
+      comp.hasHistory = decks.length > 0
+    })
   }
 
   onClick(): void {
@@ -33,10 +69,19 @@ export class DeckComponent implements OnInit {
     this.dealService.getDeal()
       .toPromise()
       .then(({ config, percentage }) => {
-        console.log(config)
         comp.configuration = config
-        comp.percentage = percentage
+        comp.percentage = `${percentage}%`
+
+        comp.historyService.getHistory()
+          .toPromise()
+          .then(({ count, percentage, decks }) => {
+            comp.historicalPercentage = `${percentage}%`
+            comp.historical = decks
+            comp.hasHistory = decks.length > 0
+          })
       })
+
+
   }
 
 }
