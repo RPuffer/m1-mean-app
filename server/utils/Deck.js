@@ -69,22 +69,22 @@ class Deck {
 
 				// if it exists - check card above for match
 				if (row > 0) {
-					currentCard.checkMatch(this.config[row - 1][column])
+					currentCard.checkMatch(config[row - 1][column])
 					config[row - 1][column].checkMatch(currentCard)
 				}
 				// if it exists - check card to the left for match
 				if (column > 0) {
-					currentCard.checkMatch(this.config[row][column - 1])
+					currentCard.checkMatch(config[row][column - 1])
 					config[row][column - 1].checkMatch(currentCard)
 				}
 				// if it exists - check card to upper left for match
 				if (row > 0 && column > 0) {
-					currentCard.checkMatch(this.config[row - 1][column - 1])
+					currentCard.checkMatch(config[row - 1][column - 1])
 					config[row - 1][column - 1].checkMatch(currentCard)
 				}
 				// if it exists - check card to upper right for match
 				if (row > 0 && column < values.length - 1) {
-					currentCard.checkMatch(this.config[row - 1][column + 1])
+					currentCard.checkMatch(config[row - 1][column + 1])
 					config[row - 1][column + 1].checkMatch(currentCard)
 				}
 

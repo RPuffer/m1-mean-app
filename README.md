@@ -17,6 +17,8 @@ npm install && npm run dev
 
 This will spin up a mongo db instance using Docker while using `ng serve` to serve the angular front-end and `nodemon` to run the express back-end.  Both front-end and back-end code will hot reload on change.
 
+to access the app in dev mode, navigate to `localhost:4200` in the browser
+
 
 ## Using Docker Compose
 
@@ -31,6 +33,8 @@ npm run compose
 ```
 
 This will build the application and spin up containers for both the application and the mongo db instance
+
+to access the app using docker-compose, navigate to `localhost:3000`
 
 
 ## Overview

@@ -3,7 +3,7 @@ const Deck = require('../utils/Deck')
 const { Configuration, HistoricalPercentage } = require('../models')
 
 router.use((req, res, next ) => {
-	console.log(`\nRequest for /api/${req.path}\n`)
+	console.log(`\nRequest for /api${req.path}\n`)
 	next()
 })
 
