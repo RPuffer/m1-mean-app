@@ -2,6 +2,10 @@ const router = require('express').Router()
 const Deck = require('../utils/Deck')
 const { Configuration, HistoricalPercentage } = require('../models')
 
+router.use((req, res, next ) => {
+	console.log(`\nRequest for :${req.path}\n`)
+	next()
+})
 
 router.get('/', (req, res, next) => {
 	res.json({ msg: 'you hit the api' })

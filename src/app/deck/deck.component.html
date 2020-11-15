@@ -1,0 +1,13 @@
+<button (click)="onClick()">
+	DEAL
+</button>
+<div class="deck-container">
+	Deck
+	<div class="deck-row" *ngFor="let row of configuration">
+		<div *ngFor="let card of row" [ngClass]="{'not-dealt': !dealt}">
+			<div class="deck-card suit-{{card.suit}}" [ngClass]="{'card-match': card.hasMatch}">
+				&nbsp;{{card.value}}
+			</div>
+		</div>
+	</div>
+</div>
