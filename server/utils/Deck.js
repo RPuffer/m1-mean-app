@@ -47,7 +47,10 @@ class Deck {
 			const i = Math.floor(Math.random() * n)
 
 			const tmp = this.deck[n]
+
+			// in case of re-shuffling an existing deck - remove any previous matches on cards
 			tmp.reset()
+			this.deck[i].reset()
 
 			this.deck[n] = this.deck[i]
 			this.deck[i] = tmp
